@@ -1,5 +1,5 @@
 streamlit
-numpy
+numpy==1.26.4
 langchain
 langchain-core
 langchain-community
