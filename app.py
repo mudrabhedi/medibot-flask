@@ -3,7 +3,6 @@ from flask import Flask, request, jsonify
 from dotenv import load_dotenv, find_dotenv
 from flask_cors import CORS
 
-
 from langchain_core.prompts import PromptTemplate
 from langchain_core.language_models.llms import LLM
 from langchain.chains import RetrievalQA
@@ -67,7 +66,8 @@ def set_custom_prompt(template):
 
 # Build app
 app = Flask(__name__)
-CORS(app) 
+CORS(app, resources={r"/*": {"origins": "http://localhost:8081"}})  # Specific origin allowed
+
 @app.route("/", methods=["GET"])
 def home():
     return "MediBot Flask Backend Running ✅"
@@ -86,11 +86,10 @@ def ask():
             llm=llm,
             chain_type="stuff",
             retriever=vectorstore.as_retriever(search_kwargs={"k": 3}),
-            return_source_documents=False,  # don't include docs in response
+            return_source_documents=False,
             chain_type_kwargs={"prompt": set_custom_prompt(CUSTOM_PROMPT_TEMPLATE)}
         )
 
-        # Run LLM chain
         result = qa_chain.invoke({"query": user_input})
         return jsonify({"answer": result["result"]})
 
