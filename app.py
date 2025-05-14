@@ -1,6 +1,8 @@
 import os
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv, find_dotenv
+from flask_cors import CORS
+
 
 from langchain_core.prompts import PromptTemplate
 from langchain_core.language_models.llms import LLM
@@ -65,7 +67,7 @@ def set_custom_prompt(template):
 
 # Build app
 app = Flask(__name__)
-
+CORS(app) 
 @app.route("/", methods=["GET"])
 def home():
     return "MediBot Flask Backend Running ✅"
